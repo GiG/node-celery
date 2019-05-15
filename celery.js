@@ -259,7 +259,14 @@ Client.prototype.call = function(name /*[args], [kwargs], [options], [callback]*
         }
     }
 
-    var task = this.createTask(name),
+    const { deliveryMode = null } = (options || {});
+    const taskOptions = {};
+
+    if (deliveryMode) {
+        taskOptions.deliveryMode = deliveryMode;
+    }
+
+    var task = this.createTask(name, taskOptions),
         result = task.call(args, kwargs, options);
 
     if (callback && result) {
@@ -292,7 +299,8 @@ function Task(client, name, options, exchange) {
         var msg = createMessage(self.name, args, kwargs, options, id);
         var pubOptions = {
             'contentType': 'application/json',
-            'contentEncoding': 'utf-8'
+            'contentEncoding': 'utf-8',
+            'deliveryMode': options.deliveryMode,
         };
 
         if (exchange) {
