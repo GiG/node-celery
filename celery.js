@@ -296,12 +296,15 @@ function Task(client, name, options, exchange) {
         }
 
         queue = options.queue || self.options.queue || queue || self.client.conf.DEFAULT_QUEUE;
-        var msg = createMessage(self.name, args, kwargs, options, id);
+        var msg = createMessage(self.name, args, kwargs, options, id);       
         var pubOptions = {
             'contentType': 'application/json',
             'contentEncoding': 'utf-8',
-            'deliveryMode': options.deliveryMode,
         };
+
+        if (typeof options.deliveryMode === "number") {
+            pubOptions.deliveryMode = options.deliveryMode;
+        }
 
         if (exchange) {
             exchange.publish(queue, msg, pubOptions, callback);
