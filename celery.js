@@ -11,7 +11,7 @@ var debug = process.env.NODE_CELERY_DEBUG === '1' ? console.info : function() {}
 
 var supportedProtocols = ['amqp', 'amqps', 'redis'];
 function getProtocol(kind, options) {
-    const protocol = url.parse(options.url).protocol.slice(0, -1);
+    var protocol = url.parse(options.url).protocol.slice(0, -1);
     if (protocol === 'amqps') {
         protocol = 'amqp';
     }
